@@ -45,6 +45,18 @@ struct CTPersonModel: Mappable {
     func allInformation() -> String{
         return self.gender + " " + self.first + "" + self.last + " " + self.city + " " + self.state + " " + self.email + " " + self.phone + "" + self.cell
     }
+    
+    func fullName() -> String {
+        return self.first + " " + self.last
+    }
+    
+    func location() -> String {
+        return self.city + " " + self.state
+    }
+    
+    func birthdayString() -> String {
+        return self.birthday.toString(format: "yyyy-MM-dd")
+    }
 }
 
 

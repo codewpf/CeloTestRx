@@ -12,10 +12,10 @@ import RxCocoa
 import RxDataSources
 import NSObject_Rx
 import SnapKit
-import Moya
 import Kingfisher
 import MJRefresh
 import SVProgressHUD
+import Then
 
 class CTPersonListVC: UIViewController {
 
@@ -24,9 +24,7 @@ class CTPersonListVC: UIViewController {
     /// table view data sources
     let dataSource = RxTableViewSectionedReloadDataSource<CTPersonListModel>(configureCell: { ds, tv, idx, item in
         let cell = tv.dequeueReusableCell(withIdentifier: CTPersonListCell.identifier, for: idx) as! CTPersonListCell
-        cell.icon.kf.setImage(with: URL(string: item.thumbnail))
-        cell.name.text = item.first + " " + item.last
-        cell.gender.text = item.gender
+        cell.model = item
         return cell
     })
     
@@ -34,12 +32,8 @@ class CTPersonListVC: UIViewController {
     fileprivate var searchController: UISearchController? = nil
     /// view controller view model
     fileprivate var viewModel: CTPersonListViewModel = CTPersonListViewModel()
-    
     /// view model out put
     fileprivate var output: CTPersonOutput?
-    
-    
-    fileprivate let disposeBag = DisposeBag()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,7 +48,7 @@ class CTPersonListVC: UIViewController {
     func setupViews() {
         self.tableView.tableFooterView = UIView()
         self.tableView.register(CTPersonListCell.self, forCellReuseIdentifier: CTPersonListCell.identifier)
-        tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        tableView.rx.setDelegate(self).disposed(by: rx.disposeBag)
 
         
 //        self.searchController = UISearchController(searchResultsController: nil)
@@ -67,10 +61,10 @@ class CTPersonListVC: UIViewController {
     
     func rxBindView() {
         let input = CTPersonInput(path: .getPerson)
-        let output = viewModel.transform(input: input)
-        output.sections.asDriver().drive(tableView.rx.items(dataSource: dataSource)).disposed(by: self.rx.disposeBag)
+        output = viewModel.transform(input: input)
+        output!.sections.asDriver().drive(tableView.rx.items(dataSource: dataSource)).disposed(by: self.rx.disposeBag)
         
-        output.refreshStatus.asObservable()
+        output!.refreshStatus.asObservable()
             .subscribe(onNext: { [weak self] status in
                 switch(status) {
                 case .none: break
@@ -90,10 +84,10 @@ class CTPersonListVC: UIViewController {
         //TODO: search status
         
         tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: {
-            output.requetCommond.onNext(true)
+            self.output?.requetCommond.onNext(true)
         })
         tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: {
-            output.requetCommond.onNext(true)
+            self.output?.requetCommond.onNext(false)
         })
     }
 
@@ -102,6 +96,13 @@ class CTPersonListVC: UIViewController {
 extension CTPersonListVC: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let person = self.dataSource.sectionModels[indexPath.section].items[indexPath.row]
+        let detail = CTDetailModel.personToDetail(person: person)
+        let detailVC = CTPersonDetailVC(detail: detail)
+        self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return CTPersonListCell.height
     }
 }
 
@@ -129,11 +130,80 @@ extension CTPersonListVC: UISearchResultsUpdating {
 
 
 
-final class CTPersonListCell: UITableViewCell, CTCellReuseIdentifier {
+final class CTPersonListCell: UITableViewCell, CTCellReuseIdentifier, CTCellConstant {
+    static var height: CGFloat = 90
     
-    let icon: UIImageView = UIImageView()
-    let name: UILabel = UILabel()
-    let gender: UILabel = UILabel()
+    private let icon: UIImageView = UIImageView().then {
+        $0.layer.cornerRadius = 5
+        $0.clipsToBounds = true
+        $0.layer.masksToBounds = true
+    }
+    private let name: UILabel = UILabel().then {
+        $0.textColor = .black
+        $0.font = .systemFont(ofSize: 20)
+    }
+    private let gender: UILabel = UILabel().then {
+        $0.textColor = .gray
+        $0.font = .systemFont(ofSize: 16)
+    }
+    private let birthday: UILabel = UILabel().then {
+        $0.textColor = .gray
+        $0.font = .systemFont(ofSize: 16)
+    }
+    
+    private var _model: CTPersonModel?
+    var model: CTPersonModel? {
+        willSet(newValue) {
+            guard let value = newValue else {
+                return
+            }
+            self._model = value
+            self.icon.kf.setImage(with: URL(string: value.thumbnail))
+            self.name.text = value.first + " " + value.last
+            self.gender.text = value.gender
+            self.birthday.text = value.birthday.toString(format: "yyyy-MM-dd")
+        }
+    }
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+
+        self.contentView.addSubview(self.icon)
+        self.icon.snp.makeConstraints { (make) in
+            make.left.equalToSuperview().offset(15)
+            make.width.height.equalTo(70)
+            make.centerY.equalToSuperview()
+        }
+        
+
+        self.contentView.addSubview(self.name)
+        self.name.snp.makeConstraints { (make) in
+            make.top.equalTo(self.icon)
+            make.left.equalTo(self.icon.snp.right).offset(10)
+//            make.right.equalToSuperview().offset(-15-80)
+            make.height.equalTo(40)
+        }
+        
+        
+        self.contentView.addSubview(self.gender)
+        self.gender.snp.makeConstraints { (make) in
+            make.top.height.equalTo(self.name)
+            make.left.equalTo(self.name.snp.right).offset(5)
+            make.right.equalToSuperview().offset(-15)
+        }
+        
+        self.contentView.addSubview(self.birthday)
+        self.birthday.snp.makeConstraints { (make) in
+            make.bottom.equalTo(self.icon)
+            make.left.right.equalTo(self.name)
+            make.height.equalTo(30)
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     
 }

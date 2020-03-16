@@ -23,6 +23,9 @@
 		A5116530241C8B2A00305FEC /* CTNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A511652F241C8B2A00305FEC /* CTNetworkManager.swift */; };
 		A5116532241CAD2300305FEC /* CTViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5116531241CAD2300305FEC /* CTViewModelType.swift */; };
 		A5116534241D078F00305FEC /* CTResponseObjectMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5116533241D078F00305FEC /* CTResponseObjectMapper.swift */; };
+		A5F9FDE7241F8450001E1DB2 /* CTPersonDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F9FDE6241F8450001E1DB2 /* CTPersonDetailVC.swift */; };
+		A5F9FDE9241F8B68001E1DB2 /* CTCellConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F9FDE8241F8B68001E1DB2 /* CTCellConstant.swift */; };
+		A5F9FDEB24202C80001E1DB2 /* CTDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F9FDEA24202C80001E1DB2 /* CTDetailModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +60,9 @@
 		A511652F241C8B2A00305FEC /* CTNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTNetworkManager.swift; sourceTree = "<group>"; };
 		A5116531241CAD2300305FEC /* CTViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTViewModelType.swift; sourceTree = "<group>"; };
 		A5116533241D078F00305FEC /* CTResponseObjectMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTResponseObjectMapper.swift; sourceTree = "<group>"; };
+		A5F9FDE6241F8450001E1DB2 /* CTPersonDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTPersonDetailVC.swift; sourceTree = "<group>"; };
+		A5F9FDE8241F8B68001E1DB2 /* CTCellConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTCellConstant.swift; sourceTree = "<group>"; };
+		A5F9FDEA24202C80001E1DB2 /* CTDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTDetailModel.swift; sourceTree = "<group>"; };
 		DD376EBC4DFC4992B0F1FE7D /* Pods_CeloTestRx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CeloTestRx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -155,6 +161,7 @@
 			isa = PBXGroup;
 			children = (
 				A511651E241A32F400305FEC /* CTPersonModel.swift */,
+				A5F9FDEA24202C80001E1DB2 /* CTDetailModel.swift */,
 				A5116524241A455300305FEC /* CTPersonListModel.swift */,
 			);
 			path = Models;
@@ -164,6 +171,7 @@
 			isa = PBXGroup;
 			children = (
 				A511651C241A321000305FEC /* CTPersonListVC.swift */,
+				A5F9FDE6241F8450001E1DB2 /* CTPersonDetailVC.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -172,6 +180,7 @@
 			isa = PBXGroup;
 			children = (
 				A5116527241C7D1200305FEC /* CTCellReuseIdentifier.swift */,
+				A5F9FDE8241F8B68001E1DB2 /* CTCellConstant.swift */,
 				A5116531241CAD2300305FEC /* CTViewModelType.swift */,
 			);
 			path = Protocols;
@@ -348,8 +357,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5F9FDE9241F8B68001E1DB2 /* CTCellConstant.swift in Sources */,
 				A5116530241C8B2A00305FEC /* CTNetworkManager.swift in Sources */,
 				A5116523241A34DA00305FEC /* CTPersonListViewModel.swift in Sources */,
+				A5F9FDEB24202C80001E1DB2 /* CTDetailModel.swift in Sources */,
 				A51164F62419A53000305FEC /* AppDelegate.swift in Sources */,
 				A5116534241D078F00305FEC /* CTResponseObjectMapper.swift in Sources */,
 				A511652B241C7D6C00305FEC /* CTRefreshStatus.swift in Sources */,
@@ -359,6 +370,7 @@
 				A5116532241CAD2300305FEC /* CTViewModelType.swift in Sources */,
 				A511651F241A32F400305FEC /* CTPersonModel.swift in Sources */,
 				A51164F82419A53000305FEC /* SceneDelegate.swift in Sources */,
+				A5F9FDE7241F8450001E1DB2 /* CTPersonDetailVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

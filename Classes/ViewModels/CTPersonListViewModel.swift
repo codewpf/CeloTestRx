@@ -47,7 +47,6 @@ extension CTPersonListViewModel: CTViewModelType {
                         print(err.localizedDescription)
                         //FIXME: - svprogresshud 设置
                     case .completed:
-                        
                         output.refreshStatus.accept(isReloadData ? .endHeaderRefresh : ((self?.models.value.count ?? 0) % (self?.pageSize ?? 10)) > 0 ? .noMoreData : .endFooterRefresh)
                     }
                 }).disposed(by: self.rx.disposeBag)
