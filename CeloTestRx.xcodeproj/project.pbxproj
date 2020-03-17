@@ -26,6 +26,8 @@
 		A5F9FDE7241F8450001E1DB2 /* CTPersonDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F9FDE6241F8450001E1DB2 /* CTPersonDetailVC.swift */; };
 		A5F9FDE9241F8B68001E1DB2 /* CTCellConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F9FDE8241F8B68001E1DB2 /* CTCellConstant.swift */; };
 		A5F9FDEB24202C80001E1DB2 /* CTDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F9FDEA24202C80001E1DB2 /* CTDetailModel.swift */; };
+		A5F9FDED242056C3001E1DB2 /* CTPersonListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F9FDEC242056C3001E1DB2 /* CTPersonListCell.swift */; };
+		A5F9FDEF242056F7001E1DB2 /* CTPersonDetailCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5F9FDEE242056F7001E1DB2 /* CTPersonDetailCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		A5F9FDE6241F8450001E1DB2 /* CTPersonDetailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTPersonDetailVC.swift; sourceTree = "<group>"; };
 		A5F9FDE8241F8B68001E1DB2 /* CTCellConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTCellConstant.swift; sourceTree = "<group>"; };
 		A5F9FDEA24202C80001E1DB2 /* CTDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTDetailModel.swift; sourceTree = "<group>"; };
+		A5F9FDEC242056C3001E1DB2 /* CTPersonListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTPersonListCell.swift; sourceTree = "<group>"; };
+		A5F9FDEE242056F7001E1DB2 /* CTPersonDetailCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CTPersonDetailCell.swift; sourceTree = "<group>"; };
 		DD376EBC4DFC4992B0F1FE7D /* Pods_CeloTestRx.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CeloTestRx.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -171,7 +175,9 @@
 			isa = PBXGroup;
 			children = (
 				A511651C241A321000305FEC /* CTPersonListVC.swift */,
+				A5F9FDEC242056C3001E1DB2 /* CTPersonListCell.swift */,
 				A5F9FDE6241F8450001E1DB2 /* CTPersonDetailVC.swift */,
+				A5F9FDEE242056F7001E1DB2 /* CTPersonDetailCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -361,11 +367,13 @@
 				A5116530241C8B2A00305FEC /* CTNetworkManager.swift in Sources */,
 				A5116523241A34DA00305FEC /* CTPersonListViewModel.swift in Sources */,
 				A5F9FDEB24202C80001E1DB2 /* CTDetailModel.swift in Sources */,
+				A5F9FDEF242056F7001E1DB2 /* CTPersonDetailCell.swift in Sources */,
 				A51164F62419A53000305FEC /* AppDelegate.swift in Sources */,
 				A5116534241D078F00305FEC /* CTResponseObjectMapper.swift in Sources */,
 				A511652B241C7D6C00305FEC /* CTRefreshStatus.swift in Sources */,
 				A511651D241A321000305FEC /* CTPersonListVC.swift in Sources */,
 				A5116525241A455300305FEC /* CTPersonListModel.swift in Sources */,
+				A5F9FDED242056C3001E1DB2 /* CTPersonListCell.swift in Sources */,
 				A5116528241C7D1200305FEC /* CTCellReuseIdentifier.swift in Sources */,
 				A5116532241CAD2300305FEC /* CTViewModelType.swift in Sources */,
 				A511651F241A32F400305FEC /* CTPersonModel.swift in Sources */,
