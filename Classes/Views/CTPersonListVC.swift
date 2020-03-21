@@ -19,6 +19,9 @@ import Then
 
 class CTPersonListVC: UIViewController {
 
+    /// view controller view model
+    fileprivate var viewModel: CTPersonListViewModel = CTPersonListViewModel()
+    
     /// list table view
     @IBOutlet weak var tableView: UITableView!
     /// table view data sources
@@ -30,16 +33,13 @@ class CTPersonListVC: UIViewController {
     
     /// search view controller
     fileprivate var searchController: UISearchController? = nil
-    /// view controller view model
-    fileprivate var viewModel: CTPersonListViewModel = CTPersonListViewModel()
-    /// view model out put
-    fileprivate var output: CTPersonOutput?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.setupViews()
-        self.rxBindView()
+        self.setupBinding()
+        self.setupRefresh()
         
         /// begin getting data
         self.tableView.mj_header?.beginRefreshing()
@@ -51,20 +51,20 @@ class CTPersonListVC: UIViewController {
         tableView.rx.setDelegate(self).disposed(by: rx.disposeBag)
 
         
-//        self.searchController = UISearchController(searchResultsController: nil)
-//        self.searchController?.searchResultsUpdater = self
-//        self.searchController?.obscuresBackgroundDuringPresentation = false
-//        self.searchController?.delegate = self
-//        self.navigationItem.searchController = self.searchController
-        
+        self.searchController = UISearchController(searchResultsController: nil)
+        self.searchController?.obscuresBackgroundDuringPresentation = false
+        self.searchController?.delegate = self
+        self.navigationItem.searchController = self.searchController
     }
     
-    func rxBindView() {
-        let input = CTPersonInput(path: .getPerson)
-        output = viewModel.transform(input: input)
-        output!.sections.asDriver().drive(tableView.rx.items(dataSource: dataSource)).disposed(by: self.rx.disposeBag)
+    func setupBinding() {
+        viewModel.input = CTPersonInput(path: .getPerson)
+        viewModel.output = viewModel.transform()
+        viewModel.output.sections
+            .flatMap(filterResult)
+            .asDriver().drive(tableView.rx.items(dataSource: dataSource)).disposed(by: self.rx.disposeBag)
         
-        output!.refreshStatus.asObservable()
+        viewModel.output.refreshStatus.asObservable()
             .subscribe(onNext: { [weak self] status in
                 switch(status) {
                 case .none: break
@@ -80,15 +80,45 @@ class CTPersonListVC: UIViewController {
                     self?.tableView.mj_footer?.endRefreshingWithNoMoreData()
                 }
             }).disposed(by: self.rx.disposeBag)
+
+    }
     
-        //TODO: search status
-        
-        tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: {
-            self.output?.requetCommond.onNext(true)
-        })
-        tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: {
-            self.output?.requetCommond.onNext(false)
-        })
+    func setupRefresh(_ fresh: Bool = true) {
+        if fresh == false {
+            self.tableView.mj_header = nil
+            self.tableView.mj_footer = nil
+        } else {
+            tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
+                self?.viewModel.output.requetCommond.onNext(true)
+            })
+            tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
+                self?.viewModel.output.requetCommond.onNext(false)
+            })
+        }
+    }
+    
+    func filterResult(data: [CTPersonListModel]) -> Driver<[CTPersonListModel]> {
+        guard let searchBar = self.searchController?.searchBar else {
+            return Driver.just(data)
+        }
+        return searchBar.rx.text.orEmpty
+            .flatMap {  query -> Driver<[CTPersonListModel]> in
+                if query.isEmpty {
+                    return Driver.just(data)
+                } else {
+                    var newData: [CTPersonListModel] = []
+                    for section in data {
+                        var sectionItems: [CTPersonModel] = []
+                        for item in section.items {
+                            if item.allInformation().contains(query) {
+                                sectionItems.append(item)
+                            }
+                        }
+                        newData.append(CTPersonListModel(items: sectionItems))
+                    }
+                    return Driver.just(newData)
+                }
+        }.asDriver(onErrorJustReturn: [])
     }
 
 }
@@ -107,27 +137,16 @@ extension CTPersonListVC: UITableViewDelegate {
     }
 }
 
-
 extension CTPersonListVC: UISearchControllerDelegate {
     func willPresentSearchController(_ searchController: UISearchController) {
-//        self.setupRefresh(with: false)
-//        self.viewModel.startSearching()
+        self.setupRefresh(false)
     }
-    
+
     func didDismissSearchController(_ searchController: UISearchController) {
-//        self.setupRefresh(with: true)
-//        self.isSearching = false
-//        self.tableView.reloadData()
+        self.setupRefresh()
     }
 }
 
-extension CTPersonListVC: UISearchResultsUpdating {
-    func updateSearchResults(for searchController: UISearchController) {
-//        guard let keyword = searchController.searchBar.text, keyword.count > 0 else { return }
-//        self.viewModel.search(keyword)
-//        self.isSearching = true
-    }
-}
 
 
 

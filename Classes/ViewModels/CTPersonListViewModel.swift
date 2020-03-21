@@ -21,13 +21,21 @@ class CTPersonListViewModel: NSObject {
     ///
     var models = BehaviorRelay<[CTPersonModel]>(value: [])
     
+    var input: CTPersonInput!
+    var output: CTPersonOutput!
+    
 }
 
 extension CTPersonListViewModel: CTViewModelType {
+    
     typealias Input = CTPersonInput
     typealias Output = CTPersonOutput
     
-    func transform(input: CTPersonInput) -> CTPersonOutput {
+    func transform() -> CTPersonOutput {
+        
+        guard let input = self.input else {
+            fatalError("\(Self.self) didn't init input")
+        }
 
         let sections = models.asObservable().map{ (models) -> [CTPersonListModel] in
             return [CTPersonListModel(items: models)]
@@ -53,8 +61,6 @@ extension CTPersonListViewModel: CTViewModelType {
         }).disposed(by: self.rx.disposeBag)
         return output
     }
-    
-    
 }
 
 struct CTPersonInput {
