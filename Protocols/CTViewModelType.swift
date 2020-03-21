@@ -11,5 +11,5 @@ import Foundation
 protocol CTViewModelType {
     associatedtype Input
     associatedtype Output
-    func transform(input: Input) -> Output
+    func transform() -> Output
 }

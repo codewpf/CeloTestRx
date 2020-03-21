@@ -165,8 +165,8 @@
 			isa = PBXGroup;
 			children = (
 				A511651E241A32F400305FEC /* CTPersonModel.swift */,
-				A5F9FDEA24202C80001E1DB2 /* CTDetailModel.swift */,
 				A5116524241A455300305FEC /* CTPersonListModel.swift */,
+				A5F9FDEA24202C80001E1DB2 /* CTDetailModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
