@@ -45,15 +45,26 @@ extension CTPersonListViewModel: CTViewModelType {
         output.requetCommond.subscribe(onNext: { [unowned self] isReloadData in
             self.pageIdx = isReloadData ? 1 : self.pageIdx+1
             CTNetworkManager.rx.request(.getPerson(path: input.path, pageSize: self.pageSize, pageIdx: self.pageIdx))
+                .retry(2)
                 .asObservable().mapArray(CTPersonModel.self)
-                .subscribe({ [weak self]event in
+                .subscribe({ [weak self] event in
                     switch event {
                     case let .next(models):
                         self?.models.accept(isReloadData ? models : (self?.models.value ?? []) + models)
-                        //FIXME: - svprogresshud 设置
+                        /// insert data into DB
+                        _ = models.map{ m in
+                            m.insertPerson().subscribe().disposed(by: self?.rx.disposeBag ?? DisposeBag())
+                        }
                     case let .error(err):
-                        print(err.localizedDescription)
-                        //FIXME: - svprogresshud 设置
+                        CTPersonModel.queryPerson(with: self?.pageIdx ?? 0, pageSize: self?.pageSize ?? 10)
+                            .subscribe(onNext: { (models) in
+                                self?.models.accept(isReloadData ? models : (self?.models.value ?? []) + models)
+                                output.refreshStatus.accept(isReloadData ? .endHeaderRefresh : ((self?.models.value.count ?? 0) % (self?.pageSize ?? 10)) > 0 ? .noMoreData : .endFooterRefresh)
+
+                            }, onError: { (error) in
+                                print("db err = " + error.localizedDescription)
+                            }).disposed(by: self?.rx.disposeBag ?? DisposeBag())
+                        print("network err = " + err.localizedDescription)
                     case .completed:
                         output.refreshStatus.accept(isReloadData ? .endHeaderRefresh : ((self?.models.value.count ?? 0) % (self?.pageSize ?? 10)) > 0 ? .noMoreData : .endFooterRefresh)
                     }
