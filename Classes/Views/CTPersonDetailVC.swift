@@ -52,13 +52,8 @@ extension CTPersonDetailVC: UITableViewDataSource {
         if cell == nil {
             cell = CTPersonDetailCell(style: .default, reuseIdentifier: CTPersonDetailCell.identifier)
         }
-        if indexPath.row == 0 {
-            cell?.selectionStyle = .default
-            cell?.accessoryType = .disclosureIndicator
-        } else {
-            cell?.selectionStyle = .none
-            cell?.accessoryType = .none
-        }
+        cell?.selectionStyle = .none
+        cell?.accessoryType = .none
         cell?.information = self.detail.details[indexPath.row]
         return cell!
     }

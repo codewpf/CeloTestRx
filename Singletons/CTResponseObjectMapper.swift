@@ -24,7 +24,6 @@ extension Response {
     
     /// map json to model array
     public func mapArray<T:BaseMappable>(_ type: T.Type) throws -> [T] {
-//        print(request?.description)
         guard let json = try mapJSON() as? [String : Any] else {
             throw MoyaError.jsonMapping(self)
         }
