@@ -11,35 +11,30 @@ import RxSwift
 import RxCocoa
 import FMDB
 
-typealias CTDataBaseHanlder = (_ status: Result<String, Error>) -> ()
-
 protocol CTDataBasable {
 }
 extension CTDataBasable {
     
-    static func createTable(with sql: String) -> Observable<String> {
-        return Observable.create { (observer) -> Disposable in
+    static func createTable(with sql: String) -> Completable {
+        return Completable.create { (completable) -> Disposable in
             CTDataBaseManager.manager.dbQueue?.inDatabase({ (db) in
                 if db.executeUpdate(sql, withArgumentsIn: []){
-                    observer.on(.next("Success"))
-                    observer.on(.completed)
-
+                    completable(.completed)
                 }else{
-                    observer.on(.error(db.lastError()))
+                    completable(.error(db.lastError()))
                 }
             })
             return Disposables.create()
         }
     }
     
-    func insertTable(with sql: String, arguments: [String]) -> Observable<[CTModelResultSetable]> {
-        return Observable.create { (observer) -> Disposable in
+    func insertTable(with sql: String, arguments: [String]) ->Completable {
+        return Completable.create { (completable) -> Disposable in
             CTDataBaseManager.manager.dbQueue?.inDatabase({ (db) in
                 if db.executeUpdate(sql, withArgumentsIn: arguments){
-                    observer.on(.next([]))
-                    observer.on(.completed)
+                    completable(.completed)
                 }else{
-                    observer.on(.error(db.lastError()))
+                    completable(.error(db.lastError()))
                 }
             })
             return Disposables.create()

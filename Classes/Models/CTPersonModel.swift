@@ -27,7 +27,7 @@ struct CTPersonModel: Mappable, CTModelResultSetable  {
         "uuid TEXT NOT NULL UNIQUE\n " +
     "); \n"
     
-    let dateFormat = "yyyy-MM-dd"
+    private let dateFormat = "yyyy-MM-dd"
     
     var gender: String = ""
     var first: String  = ""
@@ -98,7 +98,7 @@ struct CTPersonModel: Mappable, CTModelResultSetable  {
 
 
 extension CTPersonModel: CTDataBasable {
-    func insertPerson() -> Observable<[CTModelResultSetable]> {
+    func insertPerson() -> Completable {
         let sql = "INSERT OR IGNORE INTO Person(gender, name, location, email, birthday, phone, cell, thumbnail, large, uuid) VALUES(?,?,?,?,?,?,?,?,?,?)"
         let arguments = [self.gender, self.fullName(), self.location(), self.email, self.birthdayString(), self.phone, self.cell, self.thumbnail, self.large, self.uuid]
         return self.insertTable(with: sql, arguments: arguments)

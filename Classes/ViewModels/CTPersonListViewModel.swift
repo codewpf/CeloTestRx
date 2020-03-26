@@ -86,7 +86,6 @@ struct CTPersonOutput {
     let sections: Driver<[CTPersonListModel]>
     let requetCommond = PublishSubject<Bool>()
     let refreshStatus = BehaviorRelay<CTRefreshStatus>(value: .none)
-    let searchStatus = BehaviorRelay<Bool>(value: false)
     
     init(sections: Driver<[CTPersonListModel]>) {
         self.sections = sections
