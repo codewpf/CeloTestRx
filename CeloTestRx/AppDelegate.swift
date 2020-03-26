@@ -24,12 +24,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CTPersonModel.createTable(with: CTPersonModel.sql)
             .subscribe { (event) in
                 switch event {
-                case let .next(message):
-                    print("create person table success = " + message)
                 case let .error(err):
                     print("create person table success = " + err.localizedDescription)
                 default:
-                    print("create person table defualt")
+                    print("create person table success")
                 }
         }.disposed(by: rx.disposeBag)
         
