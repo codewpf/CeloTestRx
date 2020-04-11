@@ -42,7 +42,7 @@ extension CTPersonListViewModel: CTViewModelType {
         }.asDriver(onErrorJustReturn: [])
         
         let output = CTPersonOutput(sections: sections)
-        output.requetCommond.subscribe(onNext: { [unowned self] isReloadData in
+        output.requestCommond.subscribe(onNext: { [unowned self] isReloadData in
             self.pageIdx = isReloadData ? 1 : self.pageIdx+1
             CTNetworkManager.rx.request(.getPerson(path: input.path, pageSize: self.pageSize, pageIdx: self.pageIdx))
                 .retry(2)
@@ -84,7 +84,7 @@ struct CTPersonInput {
 struct CTPersonOutput {
     
     let sections: Driver<[CTPersonListModel]>
-    let requetCommond = PublishSubject<Bool>()
+    let requestCommond = PublishSubject<Bool>()
     let refreshStatus = BehaviorRelay<CTRefreshStatus>(value: .none)
     
     init(sections: Driver<[CTPersonListModel]>) {

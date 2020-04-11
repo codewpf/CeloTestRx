@@ -89,10 +89,10 @@ class CTPersonListVC: UIViewController {
             self.tableView.mj_footer = nil
         } else {
             tableView.mj_header = MJRefreshNormalHeader(refreshingBlock: { [weak self] in
-                self?.viewModel.output.requetCommond.onNext(true)
+                self?.viewModel.output.requestCommond.onNext(true)
             })
             tableView.mj_footer = MJRefreshAutoNormalFooter(refreshingBlock: { [weak self] in
-                self?.viewModel.output.requetCommond.onNext(false)
+                self?.viewModel.output.requestCommond.onNext(false)
             })
         }
     }
